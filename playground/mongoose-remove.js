@@ -9,3 +9,7 @@ Todo.remove({})
 .then((result) => {
     console.log(result)
 })
+
+Todo.findByIdAndRemove('the id goes here').then((todo) => {
+    console.log(todo)
+})
