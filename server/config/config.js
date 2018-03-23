@@ -12,5 +12,5 @@ if(env === 'development')
     process.env.MONGODB_URI = 'mongodb://localhost:27017/TodoAppTest';
 }else if (env === 'production')
 {
-    process.env.MONGODB_URI = "mongodb://admin123@ds119049.mlab.com:19049/todo-app";
+    process.env.MONGODB_URI = "mongodb://admin:123@ds119049.mlab.com:19049/todo-app";
 }
