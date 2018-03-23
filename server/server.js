@@ -61,5 +61,32 @@ app.get('/todos/:id',(req,res) => {
         });
 });
 
+
+app.delete('/todos/:id',(req,res) => {
+    
+    var todo_id = req.params.id;
+
+
+    if(!ObjectID.isValid(todo_id)){
+        return res.status(404).send();
+    }
+
+    Todo.findByIdAndRemove(todo_id)
+    .then((todo) => {
+
+        if(!todo) {
+            res.status(404).send();
+        }
+
+        res.send(todo).status(200);
+        
+    })
+    .catch((e) => {
+        res.status(400).send();
+    });
+
+})
+
+
 // listen to port
 app.listen(port,() =>console.log(`Server Connected to port ${port}...`));
