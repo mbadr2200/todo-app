@@ -7,10 +7,10 @@ const bodyParser = require('body-parser');
 const {ObjectID} =require('mongodb');
 const jwt = require('jsonwebtoken');
 //Files
-const {mongoose} = require('./db/mongoose');
-const {Todo} = require('./models/todo');
-const {User} = require('./models/user');
-
+var {mongoose} = require('./db/mongoose');
+var {Todo} = require('./models/todo');
+var {User} = require('./models/user');
+var {authunticate} = require('./middleware/authunticate');
 
 // get express work
 var app = express();
@@ -66,7 +66,7 @@ app.get('/todos/:id',(req,res) => {
         });
 });
 
-
+// delete todo section 
 app.delete('/todos/:id',(req,res) => {
     
     var todo_id = req.params.id;
@@ -92,7 +92,7 @@ app.delete('/todos/:id',(req,res) => {
 
 })
 
-
+// update the todo 
  app.patch('/todos/:id',(req,res) => {
      var id = req.params.id;
      var body = _.pick(req.body,['text','completed']);
@@ -124,7 +124,7 @@ app.delete('/todos/:id',(req,res) => {
     });
  });
 
-
+// sign up a new user 
  app.post('/users',(req,res) => {
 
     var body = _.pick(req.body,['email','password']);
@@ -143,6 +143,12 @@ app.delete('/todos/:id',(req,res) => {
     })
     
  })
+ 
+// log in with exsiting user
+app.get('/users/me',authunticate,(req,res) => {
+    res.send(req.user);
+});
+
 
 // listen to port
 app.listen(port,() =>console.log(`Server Connected to port ${port}...`));

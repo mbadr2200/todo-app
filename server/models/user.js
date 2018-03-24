@@ -64,6 +64,28 @@ UserSchema.methods.toJSON = function () {
     });
  };
 
+UserSchema.statics.findByToken = function (token) {
+
+    // search for the user with the token provided 
+    var User = this,
+        decoded;
+
+    try{
+        decoded = jwt.verify(token,'thesecret');
+    }catch(e){
+        return Promise.reject();
+    }
+    // return to chain then on the server js  
+    return User.findOne({
+        '_id':decoded._id,
+        'tokens.token':token,
+        'tokens.access':'auth'
+    });
+
+};
+
+
+
 var User = mongoose.model('user',UserSchema);
 
 
