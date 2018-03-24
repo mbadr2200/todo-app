@@ -1,9 +1,11 @@
+// enviromenta variables
 require('./config/config');
 // Libraries
 const _ = require('lodash');
 const express =  require('express');
 const bodyParser = require('body-parser');
 const {ObjectID} =require('mongodb');
+const jwt = require('jsonwebtoken');
 //Files
 const {mongoose} = require('./db/mongoose');
 const {Todo} = require('./models/todo');
@@ -21,11 +23,11 @@ app.use(bodyParser.json());
 app.post('/todos', (req,res) => {
 
     var todo =  new Todo({
-        text:req.body.text
     });
 
     todo.save().then((doc) => {
         res.send(doc);
+        text:req.body.text
     },(e) => {
         res.status(400).send(e);
     });
@@ -120,9 +122,27 @@ app.delete('/todos/:id',(req,res) => {
     .catch((e) => {
         res.status(400).send();
     });
-
-
  });
+
+
+ app.post('/users',(req,res) => {
+
+    var body = _.pick(req.body,['email','password']);
+
+    var user = new User(body);
+
+    user.save()
+    .then(() => {
+        return user.generateAuthToken()
+    })
+    .then((token) => {
+        res.header('x-auth',token).send(user)
+    })
+    .catch((e) => {
+        res.status(400).send(e)
+    })
+    
+ })
 
 // listen to port
 app.listen(port,() =>console.log(`Server Connected to port ${port}...`));
