@@ -124,7 +124,7 @@ app.delete('/todos/:id',(req,res) => {
     });
  });
 
-// sign up a new user 
+// sign up a new user  -- register 
  app.post('/users',(req,res) => {
 
     var body = _.pick(req.body,['email','password']);
@@ -144,6 +144,21 @@ app.delete('/todos/:id',(req,res) => {
     
  })
  
+// Login in excisting user
+app.post('/users/login', (req,res) => {
+
+    var body = _.pick(req.body,['email','password']);
+
+    User.findByCredentials(body.email,body.password).then((user) => {
+        return user.generateAuthToken().then((token) => {
+            res.header('x-auth',token).send(user);
+        })
+    })
+    .catch((e) => {
+        res.status(400).send();
+    });
+});
+
 // log in with exsiting user
 app.get('/users/me',authunticate,(req,res) => {
     res.send(req.user);
