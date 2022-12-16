@@ -159,6 +159,17 @@ app.post('/users/login', (req,res) => {
     });
 });
 
+// logout the user 
+app.delete('/users/me/token' , authunticate , (req,res) => {
+    req.user.removeToken(req.token)
+    .then(() => {
+        res.status(200).send();
+    })
+    .catch((e) => {
+        res.status(400).send();
+    })
+}); 
+
 // log in with exsiting user
 app.get('/users/me',authunticate,(req,res) => {
     res.send(req.user);
